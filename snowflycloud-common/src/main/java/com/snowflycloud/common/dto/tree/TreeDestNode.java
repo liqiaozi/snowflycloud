@@ -13,14 +13,7 @@ import java.util.List;
 
 import lombok.Data;
 
-/**
- * @File : TreeDestNode.java
- * @Description :
- * @Copyright : Hangzhou Hikvision digital technology Limited by Share Ltd copyright.
- * @author : lixuefei
- * @Date : 2019/10/22 13:58:31
- * @Project : ids-common
- */
+
 
 @Data
 public class TreeDestNode<T extends TreeSourceNode> {

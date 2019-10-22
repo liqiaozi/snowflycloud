@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>com.snowflycloud</groupId>
-    <artifactId>snowflycloud-passport</artifactId>
+    <artifactId>snowflycloud-sso</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>snowflycloud-passport</name>
+    <name>snowflycloud-sso</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
