@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.activiti.editor.rest.main;
+package org.activiti.rest.editor.main;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
@@ -30,7 +30,7 @@ public class StencilsetRestResource {
   
   @RequestMapping(value="/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
   public @ResponseBody String getStencilset() {
-    InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("static/stencilset_cn.json");
+    InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("activiti/stencilset_cn.json");
     try {
       return IOUtils.toString(stencilsetStream, "utf-8");
     } catch (Exception e) {
