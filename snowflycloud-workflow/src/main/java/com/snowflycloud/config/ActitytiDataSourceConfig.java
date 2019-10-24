@@ -1,4 +1,4 @@
-package com.snowflycloud.activiti.config;
+package com.snowflycloud.config;
 
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.spring.SpringProcessEngineConfiguration;

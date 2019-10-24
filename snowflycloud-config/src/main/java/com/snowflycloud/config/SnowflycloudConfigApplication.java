@@ -1,4 +1,4 @@
-package com.snowflycloud.activiti.config;
+package com.snowflycloud.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
