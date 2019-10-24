@@ -10,7 +10,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.activiti.rest.editor.main;
+package com.snowflycloud.activiti.editor;
+
+import java.io.InputStream;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.io.IOUtils;
@@ -19,13 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.InputStream;
-
 /**
  * @author Tijs Rademakers
  */
 @RestController
-@RequestMapping(value = "/service")
+@RequestMapping(value="/service")
 public class StencilsetRestResource {
   
   @RequestMapping(value="/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")

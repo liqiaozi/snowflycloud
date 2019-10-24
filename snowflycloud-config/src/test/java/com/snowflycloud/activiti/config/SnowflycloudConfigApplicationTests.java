@@ -1,4 +1,4 @@
-package com.snowflycloud.config;
+package com.snowflycloud.activiti.config;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
