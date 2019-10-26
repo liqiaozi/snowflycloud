@@ -1,4 +1,4 @@
-package com.snowflycloud.workflow.dto.model;
+package com.snowflycloud.modules.workflow.dto.model;
 
 import lombok.Data;
 

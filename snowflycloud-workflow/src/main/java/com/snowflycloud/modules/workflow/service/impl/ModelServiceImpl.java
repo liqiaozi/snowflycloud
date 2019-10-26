@@ -1,13 +1,12 @@
-package com.snowflycloud.workflow.service.impl;
+package com.snowflycloud.modules.workflow.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.pagehelper.PageInfo;
 import com.snowflycloud.common.bean.PageResult;
-import com.snowflycloud.workflow.dto.model.CreateModelDto;
-import com.snowflycloud.workflow.dto.model.ModelSearchDto;
-import com.snowflycloud.workflow.service.ModelService;
+import com.snowflycloud.modules.workflow.dto.model.CreateModelDto;
+import com.snowflycloud.modules.workflow.dto.model.ModelSearchDto;
+import com.snowflycloud.modules.workflow.service.ModelService;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Model;
@@ -62,6 +61,7 @@ public class ModelServiceImpl implements ModelService {
         ObjectNode editorNode = objectMapper.createObjectNode();
         editorNode.put("id", "snowflying");
         editorNode.put("resourceId", "snowflying");
+        editorNode.put("process_id","ssssss");
 
         ObjectNode stencilSetNode = objectMapper.createObjectNode();
         stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
@@ -77,7 +77,7 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public PageInfo<Model> getModelList(ModelSearchDto modelSearchDto, Integer pageSize, Integer pageNumber) {
+    public  PageResult<Model> getModelList(ModelSearchDto modelSearchDto, Integer pageSize, Integer pageNumber) {
 
         String tenantId = modelSearchDto.getTenantId();
         String modelName = modelSearchDto.getModelName();
@@ -101,10 +101,11 @@ public class ModelServiceImpl implements ModelService {
         List<Model> list = modelQuery.listPage(pageSize * (pageNumber - 1), pageSize);
 
         long count = modelQuery.count();
-        PageInfo<Model> pageInfo = new PageInfo<Model>(list);
-        pageInfo.setTotal(count);
+        PageResult<Model> pageResult = new PageResult(pageNumber,pageSize,count);
+        pageResult.setList(list);
 
-        return pageInfo;
+
+        return pageResult;
     }
 
 

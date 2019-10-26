@@ -1,14 +1,12 @@
-package com.snowflycloud.workflow.service;
+package com.snowflycloud.modules.workflow.service;
 
-import com.github.pagehelper.PageInfo;
 import com.snowflycloud.common.bean.PageResult;
-import com.snowflycloud.workflow.dto.model.CreateModelDto;
-import com.snowflycloud.workflow.dto.model.ModelSearchDto;
+import com.snowflycloud.modules.workflow.dto.model.CreateModelDto;
+import com.snowflycloud.modules.workflow.dto.model.ModelSearchDto;
 import org.activiti.engine.repository.Model;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @file: ModelService
@@ -46,6 +44,6 @@ public interface ModelService {
      * @param pageNumber
      * @return
      */
-    PageInfo<Model> getModelList(ModelSearchDto modelSearchDto, Integer pageSize, Integer pageNumber);
+    PageResult<Model> getModelList(ModelSearchDto modelSearchDto, Integer pageSize, Integer pageNumber);
 
 }
