@@ -17,6 +17,11 @@ public class CreateModelDto implements Serializable {
     private static final long serialVersionUID = -2155023543324766673L;
 
     /**
+     * 租户
+     */
+    private String tenantId;
+
+    /**
      * 模型分类.
      */
     private String category;

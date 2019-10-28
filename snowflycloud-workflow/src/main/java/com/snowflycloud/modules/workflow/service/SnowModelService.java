@@ -1,21 +1,23 @@
 package com.snowflycloud.modules.workflow.service;
 
 import com.snowflycloud.common.bean.PageResult;
+import com.snowflycloud.common.bean.ResultResponse;
 import com.snowflycloud.modules.workflow.dto.model.CreateModelDto;
 import com.snowflycloud.modules.workflow.dto.model.ModelSearchDto;
 import org.activiti.engine.repository.Model;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
- * @file: ModelService
+ * @file: SnowModelService
  * @description: TODO
  * @author: lixuefei
  * @create: 2019-10-24 19:57
  * @version: v1.0.0
  */
-public interface ModelService {
+public interface SnowModelService {
 
     /**
      * 创建模型
@@ -45,5 +47,28 @@ public interface ModelService {
      * @return
      */
     PageResult<Model> getModelList(ModelSearchDto modelSearchDto, Integer pageSize, Integer pageNumber);
+
+    /**
+     * 批量删除模型
+     *
+     * @param modelIdList
+     * @return
+     */
+    ResultResponse deleteModel(List<String> modelIdList);
+
+    /**
+     * 导出模型文件为xml
+     *
+     * @param modelId
+     * @param response
+     */
+    void export(String modelId, HttpServletResponse response);
+
+    /**
+     * 部署模型
+     * @param modelId
+     * @return
+     */
+    ResultResponse deploy(String modelId);
 
 }

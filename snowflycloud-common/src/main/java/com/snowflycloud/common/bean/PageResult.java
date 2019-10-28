@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageResult implements Serializable {
+public class PageResult<T> implements Serializable {
 
     private Integer pageSize;
 
@@ -31,7 +31,7 @@ public class PageResult implements Serializable {
 
     private Integer totalPage;
 
-    private List list;
+    private List<T> list;
 
     public PageResult(Integer currentPage, Integer pageSize, Long totalCount) {
         this.currentPage = currentPage;
