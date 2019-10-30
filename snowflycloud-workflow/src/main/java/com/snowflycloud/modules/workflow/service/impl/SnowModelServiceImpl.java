@@ -59,6 +59,7 @@ public class SnowModelServiceImpl implements SnowModelService {
         objectNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION, createModelDto.getDescription());
 
         Model model = repositoryService.newModel();
+        model.setTenantId(createModelDto.getTenantId());
         model.setCategory(createModelDto.getCategory());
         model.setName(createModelDto.getName());
         model.setKey(createModelDto.getKey());

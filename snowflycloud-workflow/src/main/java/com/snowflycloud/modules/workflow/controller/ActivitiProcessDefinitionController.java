@@ -3,12 +3,15 @@ package com.snowflycloud.modules.workflow.controller;
 import com.snowflycloud.common.bean.ResultResponse;
 import com.snowflycloud.modules.workflow.dto.definition.DefinitionSearchDto;
 import com.snowflycloud.modules.workflow.service.SnowDefinitionService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @ClassName ActivitiProcessDefinitionController
@@ -111,6 +114,23 @@ public class ActivitiProcessDefinitionController {
     public ResultResponse deleteProcessDefinition(@RequestParam String deployId, Boolean force) {
 
         return snowDefinitionService.deleteProcessDefinition(deployId, force);
+    }
+
+    @Autowired
+    private RuntimeService runtimeService;
+    @PostMapping(value = "/start")
+    public ResultResponse startProcess(@RequestParam String processDefinitionKey){
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        String instanceId = processInstance.getId();
+        return ResultResponse.ok(instanceId);
+    }
+
+    @PostMapping(value = "/running")
+    public ResultResponse runningProcess(){
+        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery().list();
+        ProcessInstance processInstance = list.get(0);
+
+        return ResultResponse.ok(list);
     }
 
 

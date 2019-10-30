@@ -925,12 +925,7 @@
       "mayBeRoot": true,
       "hide": true,
       "propertyPackages": [
-        "process_idpackage",
-        "namepackage",
-        "documentationpackage",
         "process_authorpackage",
-        "process_versionpackage",
-        "process_namespacepackage",
         "executionlistenerspackage",
         "eventlistenerspackage",
         "signaldefinitionspackage",

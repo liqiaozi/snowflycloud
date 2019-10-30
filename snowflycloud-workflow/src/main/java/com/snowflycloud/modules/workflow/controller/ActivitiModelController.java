@@ -5,10 +5,7 @@ import com.snowflycloud.common.bean.ResultResponse;
 import com.snowflycloud.modules.workflow.dto.model.CreateModelDto;
 import com.snowflycloud.modules.workflow.dto.model.ModelSearchDto;
 import com.snowflycloud.modules.workflow.service.SnowModelService;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +23,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/model/v1")
 public class ActivitiModelController {
-    private static final Logger logger = LoggerFactory.getLogger(ActivitiModelController.class);
 
     @Autowired
     private SnowModelService snowModelService;
-
-    @Autowired
-    private RepositoryService repositoryService;
 
 
     /**
@@ -46,6 +39,7 @@ public class ActivitiModelController {
         String modelId = snowModelService.createModel(createModelDto);
         return ResultResponse.ok(modelId);
     }
+
 
     /**
      * 跳转模型编辑器页面
@@ -82,7 +76,6 @@ public class ActivitiModelController {
     public ResultResponse deleteByIds(@RequestBody List<String> modelIdList) {
         return snowModelService.deleteModel(modelIdList);
     }
-
 
     /**
      * 导出模型的xml文件

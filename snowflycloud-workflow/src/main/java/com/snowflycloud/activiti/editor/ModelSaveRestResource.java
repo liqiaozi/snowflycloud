@@ -12,6 +12,7 @@
  */
 package com.snowflycloud.activiti.editor;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.activiti.editor.constants.ModelDataJsonConstants;
@@ -55,9 +56,7 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
         try {
 
             Model model = repositoryService.getModel(modelId);
-
             ObjectNode modelJson = (ObjectNode) objectMapper.readTree(model.getMetaInfo());
-
             modelJson.put(MODEL_NAME, name);
             modelJson.put(MODEL_DESCRIPTION, description);
             model.setMetaInfo(modelJson.toString());
@@ -65,7 +64,16 @@ public class ModelSaveRestResource implements ModelDataJsonConstants {
 
             repositoryService.saveModel(model);
 
-            repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes("utf-8"));
+            ObjectNode jsonXMLNode = (ObjectNode) objectMapper.readTree(json_xml);
+            ObjectNode properties = (ObjectNode) jsonXMLNode.get("properties");
+            properties.put("process_id",model.getKey());
+            properties.put("name",name);
+            properties.put("documentation",description);
+            properties.put("process_version",model.getVersion());
+            properties.put("process_namespace",model.getCategory());
+            jsonXMLNode.put("properties",properties);
+
+            repositoryService.addModelEditorSource(model.getId(), jsonXMLNode.toString().getBytes("utf-8"));
 
             InputStream svgStream = new ByteArrayInputStream(svg_xml.getBytes("utf-8"));
             TranscoderInput input = new TranscoderInput(svgStream);

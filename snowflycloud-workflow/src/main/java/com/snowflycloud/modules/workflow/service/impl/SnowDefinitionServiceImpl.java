@@ -56,7 +56,7 @@ public class SnowDefinitionServiceImpl implements SnowDefinitionService {
         String processKey = definitionSearchDto.getProcessKey();
 
         ProcessDefinitionQuery processDefinitionQuery =
-            repositoryService.createProcessDefinitionQuery().orderByProcessDefinitionVersion().asc();
+            repositoryService.createProcessDefinitionQuery().orderByProcessDefinitionVersion().asc().orderByDeploymentId().desc();
         if (StringUtils.isNotBlank(tenantId)) {
             processDefinitionQuery.processDefinitionTenantId(tenantId);
         }
@@ -258,6 +258,7 @@ public class SnowDefinitionServiceImpl implements SnowDefinitionService {
         }
         return ResultResponse.ok();
     }
+
 
 
 }
