@@ -25,4 +25,6 @@ public class DefinitionSearchDto implements Serializable {
 
     private Integer status;
 
+    private Boolean showLatest;
+
 }

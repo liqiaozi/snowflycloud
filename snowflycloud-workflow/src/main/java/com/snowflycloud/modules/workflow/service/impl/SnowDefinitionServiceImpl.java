@@ -2,7 +2,6 @@ package com.snowflycloud.modules.workflow.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
 import com.snowflycloud.common.bean.PageResult;
 import com.snowflycloud.common.bean.ResultResponse;
 import com.snowflycloud.modules.workflow.dto.definition.DefinitionSearchDto;
@@ -30,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -56,7 +55,8 @@ public class SnowDefinitionServiceImpl implements SnowDefinitionService {
         String name = definitionSearchDto.getName();
         String processKey = definitionSearchDto.getProcessKey();
 
-        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+        ProcessDefinitionQuery processDefinitionQuery =
+            repositoryService.createProcessDefinitionQuery().orderByProcessDefinitionVersion().asc();
         if (StringUtils.isNotBlank(tenantId)) {
             processDefinitionQuery.processDefinitionTenantId(tenantId);
         }
@@ -69,33 +69,67 @@ public class SnowDefinitionServiceImpl implements SnowDefinitionService {
         if (StringUtils.isNotBlank(processKey)) {
             processDefinitionQuery.processDefinitionKeyLike(processKey);
         }
-        List<ProcessDefinition> processDefinitionList = processDefinitionQuery.listPage(pageSize * (pageNumber - 1), pageSize);
-        long count = processDefinitionQuery.count();
+        if (!definitionSearchDto.getShowLatest()) {
+            List<ProcessDefinition> processDefinitionList = processDefinitionQuery.listPage(pageSize * (pageNumber - 1), pageSize);
+            long count = processDefinitionQuery.count();
 
-        PageResult<SnowProcessDefinitionDto> pageResult = new PageResult(pageNumber, pageSize, count);
+            PageResult<SnowProcessDefinitionDto> pageResult = new PageResult(pageNumber, pageSize, count);
 
-        List<SnowProcessDefinitionDto> list = Lists.newArrayList();
-        for (ProcessDefinition processDefinition : processDefinitionList) {
-            SnowProcessDefinitionDto snowProcessDefinitionDto = new SnowProcessDefinitionDto();
-            String deploymentId = processDefinition.getDeploymentId();
-            Deployment deployment = repositoryService.createDeploymentQuery().deploymentId(deploymentId).singleResult();
+            List<SnowProcessDefinitionDto> list = new ArrayList<>(processDefinitionList.size());
+            for (ProcessDefinition processDefinition : processDefinitionList) {
+                SnowProcessDefinitionDto snowProcessDefinitionDto = convertToSnowFromProcessDefinition(processDefinition);
+                list.add(snowProcessDefinitionDto);
+            }
+            pageResult.setList(list);
+            return ResultResponse.ok(pageResult);
+        } else {
+            // 当有多个相同标识的流程时，默认展示最新版本
+            List<ProcessDefinition> processDefinitionList = processDefinitionQuery.list();
+            //定义有序map，相同的key,添加map值后，后面的会覆盖前面的值
+            Map<String, ProcessDefinition> map = new LinkedHashMap<String, ProcessDefinition>(processDefinitionList.size());
+            //遍历相同的key，替换最新的值
+            for (ProcessDefinition pd : processDefinitionList) {
+                map.put(pd.getKey(), pd);
+            }
 
-            snowProcessDefinitionDto.setId(processDefinition.getId());
-            snowProcessDefinitionDto.setName(processDefinition.getName());
-            snowProcessDefinitionDto.setKey(processDefinition.getKey());
-            snowProcessDefinitionDto.setDeploymentId(processDefinition.getDeploymentId());
-            snowProcessDefinitionDto.setVersion(processDefinition.getVersion());
-            snowProcessDefinitionDto.setResourceName(processDefinition.getResourceName());
-            snowProcessDefinitionDto.setDiagramResourceName(processDefinition.getDiagramResourceName());
-            snowProcessDefinitionDto.setDeploymentTime(deployment.getDeploymentTime());
-            snowProcessDefinitionDto.setSuspended(processDefinition.isSuspended());
-            snowProcessDefinitionDto.setTenantId(processDefinition.getTenantId());
-            snowProcessDefinitionDto.setCategory(processDefinition.getCategory());
-            list.add(snowProcessDefinitionDto);
+            List<SnowProcessDefinitionDto> list = new ArrayList<>(processDefinitionList.size());
+            List<ProcessDefinition> linkedList = new LinkedList<ProcessDefinition>(map.values());
+            for (ProcessDefinition processDefinition : linkedList) {
+                SnowProcessDefinitionDto snowProcessDefinitionDto = convertToSnowFromProcessDefinition(processDefinition);
+                list.add(snowProcessDefinitionDto);
+            }
 
+            int size = map.values().size();
+            PageResult<SnowProcessDefinitionDto> pageResult = new PageResult(pageNumber, pageSize, (long) size);
+            pageResult.setList(list);
+            return ResultResponse.ok(pageResult);
         }
-        pageResult.setList(list);
-        return ResultResponse.ok(pageResult);
+    }
+
+    /**
+     * 转换成自定义流程定义对象.
+     *
+     * @param processDefinition
+     * @return
+     */
+    private SnowProcessDefinitionDto convertToSnowFromProcessDefinition(ProcessDefinition processDefinition) {
+        SnowProcessDefinitionDto snowProcessDefinitionDto = new SnowProcessDefinitionDto();
+        String deploymentId = processDefinition.getDeploymentId();
+        Deployment deployment = repositoryService.createDeploymentQuery().deploymentId(deploymentId).singleResult();
+
+        snowProcessDefinitionDto.setId(processDefinition.getId());
+        snowProcessDefinitionDto.setName(processDefinition.getName());
+        snowProcessDefinitionDto.setKey(processDefinition.getKey());
+        snowProcessDefinitionDto.setDeploymentId(processDefinition.getDeploymentId());
+        snowProcessDefinitionDto.setVersion(processDefinition.getVersion());
+        snowProcessDefinitionDto.setResourceName(processDefinition.getResourceName());
+        snowProcessDefinitionDto.setDiagramResourceName(processDefinition.getDiagramResourceName());
+        snowProcessDefinitionDto.setDeploymentTime(deployment.getDeploymentTime());
+        snowProcessDefinitionDto.setSuspended(processDefinition.isSuspended());
+        snowProcessDefinitionDto.setTenantId(processDefinition.getTenantId());
+        snowProcessDefinitionDto.setCategory(processDefinition.getCategory());
+
+        return snowProcessDefinitionDto;
     }
 
     @Override
@@ -204,6 +238,25 @@ public class SnowDefinitionServiceImpl implements SnowDefinitionService {
         repositoryService.addModelEditorSource(newModel.getId(), modelNode.toString().getBytes("utf-8"));
         return ResultResponse.ok("转换成功，请到【模型列表】进行查看!");
 
+    }
+
+    @Override
+    public ResultResponse deleteProcessDefinition(String deployId, Boolean force) {
+        logger.info("[deleteProcessDefinition] deployId ={}，force = {}", deployId, force);
+
+        if (force != null && force) {
+            repositoryService.deleteDeployment(deployId, true);
+        } else {
+            // 这个流程定义的流程实例在运行中，尚未结束 这时候如果你执行删除肯定会报错的
+            try {
+                repositoryService.deleteDeployment(deployId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("[deleteProcessDefinition] 普通删除流程定义异常，存在正在运行的流程实例,异常信息 = {}", e.getMessage());
+                return ResultResponse.error("存在正在运行的流程实例,删除流程定义失败，如需要请进行强制删除.");
+            }
+        }
+        return ResultResponse.ok();
     }
 
 

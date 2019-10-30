@@ -29,7 +29,6 @@ public class ActivitiProcessDefinitionController {
      * 通过id删除流程定义
      * 编辑节点分配用户
      * 通过流程定义id获取流程节点
-     * 通过key获取最新的流程
      */
 
     /**
@@ -95,7 +94,24 @@ public class ActivitiProcessDefinitionController {
         return snowDefinitionService.convertToModel(processDefinitionId);
     }
 
+    /**
+     * 删除部署的流程，
+     *
+     * @param deployId
+     * @param force    为true时级联删除流程实例。
+     *                 不管是否指定级联删除，部署的相关数据均会被删除，这些数据包括流程定义的身份数据（IdentityLink）、
+     *                 流程定义数据（ProcessDefinition）、流程资源（Resource）、部署数据（Deployment）.
+     *                 <p>
+     *                 如果设置级联(true)，则会删除流程实例数据（ProcessInstance）,其中流程实例也包括流程任务（Task）与流程实例的历史数据；
+     *                 如果设置flase 将不会级联删除。
+     *                 如果数据库中已经存在流程实例数据，那么将会删除失败，因为在删除流程定义时，流程定义数据的ID已经被流程实例的相关数据所引用。
+     * @return
+     */
+    @PostMapping(value = "/delete")
+    public ResultResponse deleteProcessDefinition(@RequestParam String deployId, Boolean force) {
 
+        return snowDefinitionService.deleteProcessDefinition(deployId, force);
+    }
 
 
 }

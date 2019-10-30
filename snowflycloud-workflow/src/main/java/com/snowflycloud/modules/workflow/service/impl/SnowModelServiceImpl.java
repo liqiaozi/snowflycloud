@@ -94,7 +94,7 @@ public class SnowModelServiceImpl implements SnowModelService {
         String key = modelSearchDto.getKey();
         String modelId = modelSearchDto.getModelId();
 
-        ModelQuery modelQuery = repositoryService.createModelQuery();
+        ModelQuery modelQuery = repositoryService.createModelQuery().orderByCreateTime().desc();
 
 
         if (StringUtils.isNotBlank(modelId)) {

@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @file: SnowDefinitionService
@@ -60,4 +59,13 @@ public interface SnowDefinitionService {
      * @return
      */
     ResultResponse convertToModel(String processDefinitionId) throws Exception;
+
+    /**
+     * 删除流程定义.
+     *
+     * @param deployId
+     * @param force
+     * @return
+     */
+    ResultResponse deleteProcessDefinition(String deployId, Boolean force);
 }
