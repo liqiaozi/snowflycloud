@@ -69,7 +69,7 @@ public class MailServiceImpl implements IMailService {
         message.setSubject(request.getSubject());
         message.setText(request.getContent());
         try {
-            this.mailSender.send(message);
+            javaMailSender.send(message);
             logger.info("[sendSimpleMail] ### 发送简单邮件成功....");
         } catch (Exception e) {
             logger.error("[sendSimpleMail] ### 发送简单邮件异常....",e.getMessage());

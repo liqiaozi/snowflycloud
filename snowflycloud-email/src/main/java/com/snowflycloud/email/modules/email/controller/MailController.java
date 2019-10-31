@@ -37,6 +37,19 @@ public class MailController {
         return response;
     }
 
+    /**
+     * 发送简单邮件
+     * @param emailRequest
+     * @return
+     */
+    @PostMapping(value = "/send/template")
+    public ResultResponse sendTemplateEmail(@RequestBody EmailRequest emailRequest){
+        ResultResponse response = mailService.sendTemplateMail(emailRequest);
+        return response;
+    }
+
+
+
 
 
 }

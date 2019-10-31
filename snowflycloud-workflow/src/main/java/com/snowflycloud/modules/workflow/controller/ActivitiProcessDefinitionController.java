@@ -116,22 +116,4 @@ public class ActivitiProcessDefinitionController {
         return snowDefinitionService.deleteProcessDefinition(deployId, force);
     }
 
-    @Autowired
-    private RuntimeService runtimeService;
-    @PostMapping(value = "/start")
-    public ResultResponse startProcess(@RequestParam String processDefinitionKey){
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
-        String instanceId = processInstance.getId();
-        return ResultResponse.ok(instanceId);
-    }
-
-    @PostMapping(value = "/running")
-    public ResultResponse runningProcess(){
-        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery().list();
-        ProcessInstance processInstance = list.get(0);
-
-        return ResultResponse.ok(list);
-    }
-
-
 }

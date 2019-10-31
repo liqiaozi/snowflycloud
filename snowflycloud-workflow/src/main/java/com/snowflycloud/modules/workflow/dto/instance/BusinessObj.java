@@ -6,16 +6,14 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * @ClassName StartProcessInstanceDto
+ * @ClassName BusinessObj
  * @Description TODO
  * @Author lixuefei
- * @Date 2019/10/30 21:40
+ * @Date 2019/10/31 14:53
  * @Version 1.0
  **/
 @Data
-public class StartProcessInstanceDto implements Serializable {
-
-    private static final long serialVersionUID = -3894164770331190115L;
+public class BusinessObj implements Serializable {
 
     /**
      * 流程定义key
@@ -43,15 +41,7 @@ public class StartProcessInstanceDto implements Serializable {
     private String businessKey;
 
     /**
-     * 流程变量
-     */
-    private Map<String, Object> processVariables;
-
-
-    /**
      * 业务变量
      */
     private Map<String, Object> businessVariables;
-
-
 }
