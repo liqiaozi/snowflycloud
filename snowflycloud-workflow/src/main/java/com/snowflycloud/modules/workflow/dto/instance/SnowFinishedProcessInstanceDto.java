@@ -1,22 +1,20 @@
 package com.snowflycloud.modules.workflow.dto.instance;
 
-
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @ClassName SnowProcessInstanceDto
- * @Description TODO
+ * @ClassName SnowFinishedProcessInstanceDto
+ * @Description 结束的流程.
  * @Author lixuefei
- * @Date 2019/10/31 20:28
+ * @Date 2019/11/1 16:26
  * @Version 1.0
  **/
 @Data
-public class SnowProcessInstanceDto implements Serializable {
-
-    private static final long serialVersionUID = -6788895710456379648L;
+public class SnowFinishedProcessInstanceDto implements Serializable {
+    private static final long serialVersionUID = -3104474076452153101L;
 
     private String processInstanceId;
 
@@ -32,15 +30,13 @@ public class SnowProcessInstanceDto implements Serializable {
 
     private String activityId;
 
-    private String currentTaskName;
+    private String result;
 
-    private String currentAssignee;
+    private String reasons;
 
     private String applicant;
 
     private String businessKey;
-
-    private String status;
 
     private String tenantId;
 
@@ -49,4 +45,8 @@ public class SnowProcessInstanceDto implements Serializable {
     private String detailAddress;
 
     private Date createTime;
+
+    private Date endTime;
+
+    private Long duration;
 }

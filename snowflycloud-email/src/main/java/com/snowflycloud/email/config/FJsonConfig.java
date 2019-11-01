@@ -1,4 +1,4 @@
-package com.snowflycloud.common.config.fastjson;/**
+package com.snowflycloud.email.config;/**
  * Created by xflig on 2019/8/18.
  */
 

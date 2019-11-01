@@ -70,8 +70,8 @@ public class SnowModelServiceImpl implements SnowModelService {
         String modelId = model.getId();
 
         ObjectNode editorNode = objectMapper.createObjectNode();
-        editorNode.put("id", "snowflying");
-        editorNode.put("resourceId", "snowflying");
+        editorNode.put("id", "canvas");
+        editorNode.put("resourceId", "canvas");
 
         ObjectNode stencilSetNode = objectMapper.createObjectNode();
         stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");

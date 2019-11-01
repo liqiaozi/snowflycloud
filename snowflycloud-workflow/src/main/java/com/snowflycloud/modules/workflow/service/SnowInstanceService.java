@@ -4,6 +4,9 @@ import com.snowflycloud.common.bean.ResultResponse;
 import com.snowflycloud.modules.workflow.dto.instance.InstanceSearchDto;
 import com.snowflycloud.modules.workflow.dto.instance.StartProcessInstanceDto;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
 /**
  * @ClassName SnowInstanceService
  * @Description TODO
@@ -30,4 +33,39 @@ public interface SnowInstanceService {
      * @return
      */
     ResultResponse queryRunningProcessInstance(InstanceSearchDto instanceSearchDto, Integer pageNumber, Integer pageSize);
+
+    /**
+     * 查询已经结束的流程.
+     *
+     * @param instanceSearchDto
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    ResultResponse queryFinishedProcessInstance(InstanceSearchDto instanceSearchDto, Integer pageNumber, Integer pageSize);
+
+    /**
+     * 挂起、激活流程实例
+     *
+     * @param processInstanceId
+     * @param status
+     * @return
+     */
+    ResultResponse updateProcessInstanceStatus(String processInstanceId, String status);
+
+    /**
+     * @param processInstanceIdList
+     * @param deleteReason
+     * @param status
+     * @return
+     */
+    ResultResponse deleteProcessInstance(List<String> processInstanceIdList, String deleteReason, String status);
+
+    /**
+     * 显示流程图，带流程跟踪.
+     *
+     * @param processInstanceId
+     * @param httpServletResponse
+     */
+    void showDiagram(String processInstanceId, HttpServletResponse httpServletResponse);
 }

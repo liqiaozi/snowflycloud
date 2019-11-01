@@ -20,10 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -44,6 +41,7 @@ public class ModelEditorJsonRestResource implements ModelDataJsonConstants {
   private ObjectMapper objectMapper;
   
   @RequestMapping(value="/model/{modelId}/json", method = RequestMethod.GET, produces = "application/json")
+  @ResponseBody
   public ObjectNode getEditorJson(@PathVariable String modelId) {
     ObjectNode modelNode = null;
     
