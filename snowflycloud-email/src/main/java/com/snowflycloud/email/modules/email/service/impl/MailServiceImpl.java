@@ -197,7 +197,7 @@ public class MailServiceImpl implements IMailService {
         if(!CollectionUtils.isEmpty(request.getCc())){
             helper.setCc(request.getCc().toArray(new String[request.getCc().size()]));
         }
-        if(CollectionUtils.isEmpty(request.getBcc())){
+        if(!CollectionUtils.isEmpty(request.getBcc())){
             helper.setBcc(request.getBcc().toArray(new String[request.getBcc().size()]));
         }
         helper.setSubject(request.getSubject());
