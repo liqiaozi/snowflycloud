@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 用户服务管理
  **/
@@ -30,5 +33,22 @@ public class UserController {
     public ResultResponse queryUserByUsername(@PathVariable String username) {
         User user = userService.queryUserByUsername(username);
         return ResultResponse.ok(user);
+    }
+
+    /**
+     * 查询用户列表
+     *
+     * @return
+     */
+    @GetMapping(value = "/list")
+    public ResultResponse queryUserList() {
+        List<User> userList = new ArrayList<>();
+        User user1 = new User();
+        user1.setUsername("aa");
+        User user2 = new User();
+        user2.setUsername("aa");
+        userList.add(user1);
+        userList.add(user2);
+        return ResultResponse.ok(userList);
     }
 }
