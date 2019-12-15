@@ -7,11 +7,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"com.snowflycloud"})
 public class SnowflycloudOauth2Application {
-
     public static void main(String[] args) {
         SpringApplication.run(SnowflycloudOauth2Application.class, args);
     }
-
 }

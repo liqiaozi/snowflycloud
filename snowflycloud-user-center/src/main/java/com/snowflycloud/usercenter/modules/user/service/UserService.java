@@ -1,5 +1,6 @@
 package com.snowflycloud.usercenter.modules.user.service;
 
+import com.snowflycloud.common.dto.user.UserDto;
 import com.snowflycloud.usercenter.modules.user.domain.User;
 
 /**
@@ -14,7 +15,7 @@ public interface UserService {
      *
      * @return
      */
-    User queryUserByUsername(String username);
+    UserDto queryUserByUsername(String username);
 
     /**
      * 通过手机号查询用户

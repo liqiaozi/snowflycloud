@@ -9,7 +9,7 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 @EnableOAuth2Sso
 @EnableZuulProxy
 @EnableDiscoveryClient
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.snowflycloud.gateway")
 public class SnowflycloudGatewayApplication {
 
     public static void main(String[] args) {

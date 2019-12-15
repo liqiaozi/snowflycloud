@@ -1,9 +1,12 @@
 package com.snowflycloud.gateway.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import com.snowflycloud.gateway.bean.ResultResponse;
 import com.snowflycloud.gateway.utils.CookieUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Component
 public class AccessFilter extends ZuulFilter {
+
+    private static final String INVALID_TOKEN = "invalid token";
 
 
     @Override
@@ -56,21 +61,44 @@ public class AccessFilter extends ZuulFilter {
         RequestContext currentContext = RequestContext.getCurrentContext();
         HttpServletRequest request = currentContext.getRequest();
 
-        // 先从cookie 中获取token,cookie中获取失败的话，再从header 中获取，双重校验
-        Cookie tokenCookie = CookieUtil.getCookieByName(request, "token");
-        if (tokenCookie == null || StringUtils.isEmpty(tokenCookie.getValue())) {
-            readTokenFromHeader(currentContext, request);
-        } else {
-            verifyToken(currentContext, request, tokenCookie.getValue());
-        }
+//        // 先从cookie 中获取token,cookie中获取失败的话，再从header 中获取，双重校验
+//        Cookie tokenCookie = CookieUtil.getCookieByName(request, "token");
+//        if (tokenCookie == null || StringUtils.isEmpty(tokenCookie.getValue())) {
+//            readTokenFromHeader(currentContext, request);
+//        } else {
+//            verifyToken(currentContext, request, tokenCookie.getValue());
+//        }
 
         return null;
     }
 
     public void readTokenFromHeader(RequestContext requestContext, HttpServletRequest request) {
+        //从 header 中读取
+        String headerToken = request.getHeader("token");
+        if (StringUtils.isEmpty(headerToken)) {
+            setUnauthorizedResponse(requestContext, INVALID_TOKEN);
+        } else {
+            verifyToken(requestContext, request, headerToken);
+        }
 
     }
 
+    /**
+     * 设置 401 无权限状态
+     */
+    private void setUnauthorizedResponse(RequestContext requestContext, String msg) {
+        requestContext.setSendZuulResponse(false);
+        requestContext.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());
+        ResultResponse response = new ResultResponse();
+        response.setCode(HttpStatus.UNAUTHORIZED.value());
+        response.setMessage(msg);
+        response.setSuccess(false);
+        requestContext.setResponseBody(JSONObject.toJSONString(response));
+    }
+
+    /**
+     * 校验token
+     */
     public void verifyToken(RequestContext requestContext, HttpServletRequest request, String token) {
 
     }

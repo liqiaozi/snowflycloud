@@ -2,19 +2,25 @@ package com.snowflycloud.usercenter.modules.user.domain;
 
 import com.snowflycloud.common.base.SnowflyBaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * 系统用户
  **/
 @Data
+@Entity
 @Table(name = "sys_user")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class User extends SnowflyBaseEntity {
 
     private static final long serialVersionUID = -5694540241055653940L;
+
+    @Id
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(name = "user_id")
+    private String userId;
 
     /**
      * 用户名

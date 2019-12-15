@@ -10,9 +10,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
+ *SecurityConfig配置： 用户保护oauth要开放的资源，同时主要作用于client端以及token的认证：
+ *我们让SecurityConfig优先于ResourceServerConfig，且在SecurityConfig 不拦截oauth要开放的资源，
+ *在ResourceServerConfig 中配置需要token验证的资源，也就是我们对外提供的接口。所以这里对于所有微服务的接口定义有一个要求，就是全部以/api开头。
  *
  **/
 @Configuration
@@ -27,9 +32,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new NoEncryptPasswordEncoder();
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/oauth/**").and().authorizeRequests().antMatchers("/oauth/**").authenticated().and().csrf().disable();
+        http.requestMatchers()
+            .antMatchers("/oauth/**")
+            .and()
+            .authorizeRequests()
+            .antMatchers("/oauth/**")
+            .authenticated()
+            .and()
+            .csrf()
+            .disable();
     }
 
     @Override
